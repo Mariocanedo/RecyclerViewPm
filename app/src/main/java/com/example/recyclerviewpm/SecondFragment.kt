@@ -19,6 +19,19 @@ class SecondFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private var word : String? = null
+    private var position = -1
+
+
+    // recibiendo parametros con bundle
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            word = it.getString("selectWord")
+            position = it.getInt("position",-1)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,9 +45,10 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }
+
+
+        binding!!.textViewSelected.text = word
+        binding.editTextWord.setText(word)
     }
 
     override fun onDestroyView() {

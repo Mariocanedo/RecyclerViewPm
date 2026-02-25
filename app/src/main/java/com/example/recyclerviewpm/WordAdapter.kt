@@ -1,5 +1,6 @@
 package com.example.recyclerviewpm
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -10,7 +11,10 @@ import com.example.recyclerviewpm.databinding.WordItemListBinding
 // 4 -implementar los métos de adapter OnCreateViewHolder, OnBindViewHolder, getItemCount()
 class WordAdapter
 /***************** Paso 2.Representación de los datos */
-    (private val mwordList: MutableList<String?> ): RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
+    (private val mwordList: MutableList<String>,
+            private val listener : (String,Int)->Unit //👈 //enviamos palabra +posicion
+
+            ): RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
 
 
 
@@ -40,8 +44,20 @@ class WordAdapter
     override fun onBindViewHolder(holder: WordViewHolder, position: Int
     ) {
 
-        val elemento =mwordList.get(position)
-        holder.textView.setText(elemento)
+        //val elemento =mwordList.get(position)
+       // holder.textView.setText(elemento)
+
+        val element = mwordList[position]
+        holder.textView.text = element
+
+         // el rv se puede haccer un click y capta la palabra y la posicion
+        holder.itemView.setOnClickListener {
+            // Log antes de llamar al listener
+            Log.d("WordAdapter", "Item clicked: word=$element, position=$position")
+            listener(element,position)
+
+        }
+
 
     }
 

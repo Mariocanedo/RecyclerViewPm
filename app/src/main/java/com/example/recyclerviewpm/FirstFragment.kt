@@ -25,6 +25,9 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    // Adapter declarado a nivel de clase (NO local)
+    private lateinit var  adapter: WordAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,17 +41,41 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }
+
+        //1 Instanciar el adapter y le pasamos los datos con las palabras
+        // CARGAR LOS DATOS
+        setData()
+        //val adapter = WordAdapter(datalist)
+
+        // 2️⃣ IMPORTANTE: Inicializamos el adapter de la clase (sin "val")
+       // adapter = WordAdapter(datalist)
+       adapter= WordAdapter(datalist as MutableList<String?> as MutableList<String>){
+
+           selectWord, position ->
+           // Crear fragmento destino
+           val secondFragment = SecondFragment()
+           // Crear bundle y pasar la palabra y posición
+
+           // captamos la selección de la palabra
+           val bundle = Bundle()
+           bundle.putString("selectWord", selectWord)
+           bundle.putInt("position", position)
+           secondFragment.arguments = bundle
+
+           parentFragmentManager.beginTransaction()
+               .replace(R.id.nav_host_fragment_content_main, secondFragment)
+               .addToBackStack(null)
+               .commit()
+
+
+
+       }
+
 
 
         // para probar las palabras
         Log.d("Listado", setData().toString())
 
-        //1 Instanciar el adapter y le pasamos los datos con las palabras
-
-        val adapter = WordAdapter(setData())
         //2 le pasamos el adapter al recyclerView
 
         binding.Rv.setAdapter(adapter)
@@ -57,6 +84,13 @@ class FirstFragment : Fragment() {
 
         binding.Rv.setLayoutManager(LinearLayoutManager(getContext()))
         binding.Rv.setHasFixedSize(true)
+
+
+        // Configuramos el FAB para agregar nuevas palabras
+         binding!!.fab.setOnClickListener {
+
+             addNewWord()
+         }
 
     }
 
@@ -69,6 +103,18 @@ class FirstFragment : Fragment() {
             datalist.add("Palabra" +i)
         }
         return  datalist
+    }
+
+
+    // crea palabras por medio del Button fav
+    private fun addNewWord(){
+
+        val newIndex = datalist.size
+        val newWord = "Palabra $newIndex"
+        datalist.add(newWord)
+        adapter.notifyItemInserted(newIndex)
+        binding!!.Rv.scrollToPosition(newIndex)
+
     }
 
 
