@@ -49,6 +49,60 @@ class SecondFragment : Fragment() {
 
         binding!!.textViewSelected.text = word
         binding.editTextWord.setText(word)
+
+
+        // Botón para actualizar palabra
+
+        binding!!.buttonUpdate.setOnClickListener {
+
+            val newWord = binding!!.editTextWord.text.toString()
+            if (position >= 0) // validacion
+                {
+
+            val bundle = Bundle()
+                    bundle.putInt("position",position)
+                    bundle.putString("newWord", newWord)
+                    parentFragmentManager.setFragmentResult("updateWord",bundle)
+                    //Sirve para volver al fragmento anterior, eliminando el fragment actual del Back Stack (pila de retroceso).
+                    parentFragmentManager.popBackStack()
+        }
+    }
+
+
+        // Botón para Eliminar
+
+
+        binding!!.buttonUpdate.setOnClickListener {
+
+            val newWord = binding!!.editTextWord.text.toString()
+            if (position >= 0) // validacion
+            {
+
+                val bundle = Bundle()
+                bundle.putInt("position",position)
+                bundle.putString("newWord", newWord)
+                parentFragmentManager.setFragmentResult("updateWord",bundle)
+                //Sirve para volver al fragmento anterior, eliminando el fragment actual del Back Stack (pila de retroceso).
+                parentFragmentManager.popBackStack()
+            }
+        }
+
+
+        binding!!.buttonDelete.setOnClickListener {
+
+            val newWord = binding!!.editTextWord.text.toString()
+            if (position >= 0) // validacion
+            {
+
+                val bundle = Bundle()
+                bundle.putInt("position",position)
+                parentFragmentManager.setFragmentResult("deleteWord",bundle)
+                //Sirve para volver al fragmento anterior, eliminando el fragment actual del Back Stack (pila de retroceso).
+                parentFragmentManager.popBackStack()
+            }
+        }
+
+
     }
 
     override fun onDestroyView() {

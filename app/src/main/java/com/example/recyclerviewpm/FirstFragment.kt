@@ -72,6 +72,43 @@ class FirstFragment : Fragment() {
        }
 
 
+        // recibe los elementos con bundle y actualiza la palabra por medio de la posicion
+
+
+        parentFragmentManager.setFragmentResultListener("updateWord",this){_ ,
+            bundle ->
+
+            val pos = bundle.getInt("position")
+            val newWord = bundle.getString("newWord")
+
+            if(pos in datalist.indices && newWord != null){
+
+
+                datalist[pos] = newWord
+                adapter.notifyItemChanged(pos)
+            }
+        }
+
+
+
+        parentFragmentManager.setFragmentResultListener("deleteWord",this){_ ,
+                                                                           bundle ->
+
+            val pos = bundle.getInt("position")
+
+
+            if(pos in datalist.indices){
+
+               datalist.removeAt(pos)
+                adapter.notifyItemChanged(pos)
+            }
+        }
+
+
+
+
+
+
 
         // para probar las palabras
         Log.d("Listado", setData().toString())
